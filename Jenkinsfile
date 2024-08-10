@@ -10,7 +10,8 @@ podTemplate(
       resourceRequestCpu: '100m',
       resourceLimitCpu: '300m',
       resourceRequestMemory: '300Mi',
-      resourceLimitMemory: '500Mi'
+      resourceLimitMemory: '500Mi',
+      privileged: true 
     ),
     containerTemplate(
       name: 'kubectl',
@@ -39,6 +40,11 @@ podTemplate(
   ]
 ) {
   node('mypod') {
+    stage('Check Docker Access') {
+      container('docker') {
+        sh 'docker version'
+      }
+    }
     stage('Build Image') {
       container('docker') {
         sh 'docker build . -t icweiner'
